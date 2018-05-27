@@ -1,0 +1,1 @@
+java -cp druid-1.0.15.jar com.alibaba.druid.filter.config.ConfigTools 明文

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+   <!-- 指定一个文件目录，当EhCache把数据写到硬盘上时，将把数据写到这个文件目录下 -->
+   <diskStore path="java.io.tmpdir"/>
+
+   <!-- 设定缓存的默认数据过期策略 -->
+   <defaultCache
+           maxElementsInMemory="10000"
+           eternal="false"
+           overflowToDisk="true"
+           timeToIdleSeconds="10"
+           timeToLiveSeconds="20"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"/>
+   <!--
+       说明：
+       name:缓存名称
+       maxElementsInMemory:内存中最大的缓存对象
+       maxElementsOnDisk:硬盘中最大的缓存对象数 0表示无限大
+       eternal：true表示永不过期，默认为false;
+       overflowToDisk:true表示当内存的缓存对象达到了maxElementsInMemory界限后，会把溢出的对象写到磁盘。如果要写磁盘的话
+       对象必须实现了ISerializable接口。
+       diskPersistent:是否缓存虚拟机重启期间的数据。要想把cache真正持久化到磁盘,写程序时注意执行net.sf.ehcache.Cache.put(Element element)后要调用flush()方法。
+       diskExpiryThreadIntervalSeconds：磁盘失效线程运行时间间隔，默认为120秒
+       timeToIdleSeconds：对象自最后一次访问之后，如果处于空闲状态的时间超过了timeToIdleSeconds后，这个对象就过期了
+       timeToLiveSeconds:对象自从加入Ehcache后，如果没有被访问，则最大存活时间。
+   -->
+   <cache name="cacheTest"
+          maxElementsInMemory="1000"
+          eternal="false"
+          overflowToDisk="true"
+          timeToIdleSeconds="10"
+          timeToLiveSeconds="20"/>
+
+</ehcache>

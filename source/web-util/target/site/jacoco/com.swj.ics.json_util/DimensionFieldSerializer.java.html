@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DimensionFieldSerializer.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">web-util</a> &gt; <a href="index.source.html" class="el_package">com.swj.ics.json_util</a> &gt; <span class="el_source">DimensionFieldSerializer.java</span></div><h1>DimensionFieldSerializer.java</h1><pre class="source lang-java linenums">package com.swj.ics.json_util;
+
+
+import com.google.common.base.Preconditions;
+import org.codehaus.jackson.Version;
+import org.codehaus.jackson.Versioned;
+import org.codehaus.jackson.map.introspect.AnnotatedField;
+import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
+import org.codehaus.jackson.util.VersionUtil;
+
+import java.lang.annotation.Annotation;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+/**
+ * Created by swj on 2017/2/8.
+ */
+<span class="nc" id="L17">    public class DimensionFieldSerializer extends JacksonAnnotationIntrospector</span>
+implements Versioned
+{
+    @Override
+    public boolean isHandled(Annotation ann) {
+<span class="nc" id="L22">        Class&lt;?&gt; clazz= ann.annotationType();</span>
+<span class="nc bnc" id="L23" title="All 2 branches missed.">        if(clazz==Dimension.class)</span>
+        {
+<span class="nc" id="L25">            return true;</span>
+        }
+<span class="nc" id="L27">        return super.isHandled(ann);</span>
+    }
+
+    @Override
+    public String findSerializablePropertyName(AnnotatedField af) {
+<span class="nc" id="L32">        return getPropertyName(af);</span>
+    }
+
+    @Override
+    public String findDeserializablePropertyName(AnnotatedField af) {
+<span class="nc" id="L37">        return getPropertyName(af);</span>
+    }
+
+    private String getPropertyName(AnnotatedField af)
+    {
+<span class="nc" id="L42">        Dimension dimension = af.getAnnotation(Dimension.class);</span>
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if(dimension!=null)</span>
+        {
+<span class="nc" id="L45">           String valueType= dimension.valueType();</span>
+<span class="nc" id="L46">            Preconditions.checkArgument(isNullOrEmpty(valueType),&quot;@Dimension注解中的valueType不能为空&quot;);</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            if(valueType.equalsIgnoreCase(&quot;id&quot;))</span>
+            {
+<span class="nc" id="L49">                return af.getName()+&quot;_id&quot;;</span>
+            }
+<span class="nc bnc" id="L51" title="All 2 branches missed.">            else if(valueType.equalsIgnoreCase(&quot;code&quot;))</span>
+            {
+<span class="nc" id="L53">                return af.getName()+&quot;_code&quot;;</span>
+            }
+        }
+<span class="nc" id="L56">        return af.getName();</span>
+    }
+
+    public Version version() {
+<span class="nc" id="L60">        return VersionUtil.versionFor(getClass());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

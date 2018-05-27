@@ -1,0 +1,24 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+web-util,com.swj.ics.jedis_util,JedisUtil,121,0,8,0,34,0,9,0,5,0
+web-util,com.swj.ics.jedis_util,JedisUtil.JedisUtilFactory,9,0,0,0,2,0,2,0,2,0
+web-util,com.swj.ics.jedis_util,RedisConfig,14,0,0,0,6,0,2,0,2,0
+web-util,com.swj.ics.json_util,DimensionAdapterHelper,66,0,0,0,21,0,5,0,5,0
+web-util,com.swj.ics.json_util,DimensionFieldSerializer,72,0,8,0,17,0,10,0,6,0
+web-util,com.swj.ics.json_util,DimensionAdapterHelper.Type,67,0,0,0,17,0,9,0,9,0
+web-util,com.swj.ics.RPCSimple,ExporterThread,298,0,48,0,45,0,26,0,2,0
+web-util,com.swj.ics.RPCSimple,RpcImporter,22,0,0,0,3,0,2,0,2,0
+web-util,com.swj.ics.RPCSimple,RpcImporter.new InvocationHandler() {...},86,0,12,0,19,0,8,0,2,0
+web-util,com.swj.ics.RPCSimple,RpcExporter,34,0,0,0,8,0,3,0,3,0
+web-util,com.swj.ics.RPCSimple,EchoServiceImpl,16,0,2,0,2,0,3,0,2,0
+web-util,com.swj.ics.RPCSimple,RpcMain.new Runnable() {...},19,0,0,0,6,0,2,0,2,0
+web-util,com.swj.ics.RPCSimple,RpcMain,36,0,0,0,9,0,2,0,2,0
+web-util,com.swj.ics.proxySamples,Hi_interface_Proxy,13,0,0,0,6,0,2,0,2,0
+web-util,com.swj.ics.proxySamples,Hi_interface_class,7,0,0,0,3,0,2,0,2,0
+web-util,com.swj.ics.proxySamples,Hi_dynamic_proxy,28,0,0,0,6,0,3,0,3,0
+web-util,com.swj.ics.proxySamples,StaticProxy,15,0,0,0,5,0,2,0,2,0
+web-util,com.swj.ics.proxySamples,CGLibClassProxy.new MethodInterceptor() {...},16,0,0,0,3,0,2,0,2,0
+web-util,com.swj.ics.proxySamples,CGLibClassProxy,22,0,0,0,6,0,2,0,2,0
+web-util,com.swj.ics.proxySamples,DynamicProxy,19,0,0,0,6,0,2,0,2,0
+web-util,com.swj.ics.proxySamples,CGlibProxy,23,0,0,0,7,0,2,0,2,0
+web-util,com.swj.ics.proxySamples,Hi_dynamic_interface_implement,7,0,0,0,3,0,2,0,2,0
+web-util,com.swj.ics.proxySamples,CGLibClass,5,0,0,0,2,0,2,0,2,0

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/spring-aop.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath*:mysql.properties</value>
+                <value>classpath*:redis.properties</value>
+            </list>
+        </property>
+    </bean>
+
+<bean id="autoDealerDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="${mysql_driver_classname}" />
+    <property name="url" value="${mysql_url}" />
+    <property name="username" value="${mysql_username}" />
+    <property name="password" value="${mysql_password}" />
+</bean>
+
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="autoDealerDataSource" />
+
+    </bean>
+<tx:annotation-driven proxy-target-class="false" transaction-manager="txManager" />
+
+    <!--配置mybatis文件,mappperLocations配置mapper.xml文件,configLocation配置mybatis-config文件-->
+<bean class="org.mybatis.spring.SqlSessionFactoryBean" id="autoDealerSqlSessionFactory">
+    <property name="dataSource" ref="autoDealerDataSource" />
+    <property name="mapperLocations" value="classpath:mapper/autodealer/*.xml" />
+    <property name="configLocation" value="classpath:mybatis-config.xml"/>
+</bean>
+
+    <!--自动扫描所有Xxx.mapper以及对应的mapper接口文件-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.swj.ics.web_dao" />
+    </bean>
+
+    <!--自动bean注解扫描-->
+<context:component-scan base-package="com.swj.ics.spring_redis.service" />
+</beans>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DimensionAdapterHelper.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">web-util</a> &gt; <a href="index.source.html" class="el_package">com.swj.ics.json_util</a> &gt; <span class="el_source">DimensionAdapterHelper.java</span></div><h1>DimensionAdapterHelper.java</h1><pre class="source lang-java linenums">package com.swj.ics.json_util;
+
+import com.google.common.base.Throwables;
+import org.codehaus.jackson.map.AnnotationIntrospector;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import java.io.IOException;
+import java.io.StringWriter;
+
+/**
+ * Created by swj on 2017/2/9.
+ */
+<span class="nc" id="L13">public class DimensionAdapterHelper {</span>
+
+<span class="nc" id="L15">    private final static ObjectMapper objectMapper=new ObjectMapper();</span>
+
+    static
+    {
+<span class="nc" id="L19">        AnnotationIntrospector annotationIntrospector=new DimensionFieldSerializer();</span>
+<span class="nc" id="L20">        objectMapper.setAnnotationIntrospector(annotationIntrospector);</span>
+<span class="nc" id="L21">    }</span>
+
+    public static String beanToJson(Object object)
+    {
+<span class="nc" id="L25">        StringWriter stringWriter=new StringWriter();</span>
+        try {
+<span class="nc" id="L27">            objectMapper.writeValue(stringWriter,object);</span>
+<span class="nc" id="L28">            return stringWriter.toString();</span>
+<span class="nc" id="L29">        } catch (IOException e) {</span>
+<span class="nc" id="L30">            e.printStackTrace();</span>
+<span class="nc" id="L31">            throw Throwables.propagate(e);</span>
+        }
+    }
+
+    public static  &lt;T&gt; T jsonToBean(String json,Class&lt;T&gt; cls)
+    {
+        try {
+<span class="nc" id="L38">            return (T)objectMapper.readValue(json,cls);</span>
+<span class="nc" id="L39">        } catch (IOException e) {</span>
+<span class="nc" id="L40">            e.printStackTrace();</span>
+<span class="nc" id="L41">            throw Throwables.propagate(e);</span>
+        }
+    }
+
+
+    public static class Type {
+
+        private String code;
+        @Dimension(valueType = &quot;id&quot;)
+        private String description;
+
+        @Dimension(valueType = &quot;code&quot;)
+        private String value;
+
+<span class="nc" id="L55">        public Type() {</span>
+<span class="nc" id="L56">        }</span>
+
+<span class="nc" id="L58">        public Type(String code, String description, String value) {</span>
+<span class="nc" id="L59">            this.code = code;</span>
+<span class="nc" id="L60">            this.description = description;</span>
+<span class="nc" id="L61">            this.value = value;</span>
+<span class="nc" id="L62">        }</span>
+
+        public String getCode() {
+<span class="nc" id="L65">            return code;</span>
+        }
+
+        public void setCode(String code) {
+<span class="nc" id="L69">            this.code = code;</span>
+<span class="nc" id="L70">        }</span>
+
+        public String getDescription() {
+<span class="nc" id="L73">            return description;</span>
+        }
+
+        public void setDescription(String description) {
+<span class="nc" id="L77">            this.description = description;</span>
+<span class="nc" id="L78">        }</span>
+
+        public String getValue() {
+<span class="nc" id="L81">            return value;</span>
+        }
+
+        public void setValue(String value) {
+<span class="nc" id="L85">            this.value = value;</span>
+<span class="nc" id="L86">        }</span>
+
+        @Override
+        public String toString() {
+<span class="nc" id="L90">            return this.getClass().getName()+&quot;@&quot;+hashCode()+&quot;[code=&quot;+</span>
+                    code+&quot;,description=&quot;+description+&quot;,value=&quot;+value
+                    +&quot;]&quot;;
+        }
+    }
+
+    public static void main(String[] args)
+    {
+<span class="nc" id="L98">        Type type=new Type(&quot;a&quot;,&quot;b&quot;,&quot;c&quot;);</span>
+<span class="nc" id="L99">        String serializedValue=beanToJson(type);</span>
+<span class="nc" id="L100">        System.out.println(serializedValue);</span>
+<span class="nc" id="L101">        Type tt=jsonToBean(serializedValue,Type.class);</span>
+<span class="nc" id="L102">        System.out.println(tt);</span>
+<span class="nc" id="L103">    }</span>
+
+
+
+}
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

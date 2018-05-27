@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/spring-aop.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/spring-context.xsd">
+
+    <!--自动扫描注解的bean-->
+    <context:component-scan base-package="com.swj.ics.spring_redis.service"/>
+    <!--引入properties文件-->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:redis.properties</value>
+                <!--要是有多个配置文件，只需在这里继续添加即可-->
+                <value>classpath*:mysql.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--jedis 配置-->
+<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+    <property name="maxTotal" value="${redis.maxWait}" />
+    <property name="maxIdle" value="${redis.maxIdle}" />
+    <property name="testOnBorrow" value="${redis.testOnBorrow}" />
+</bean>
+    <!--redis 的配置-->
+    <bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="poolConfig" ref="jedisPoolConfig"/>
+        <property name="hostName" value="${redis.host}" />
+        <property name="port" value="${redis.port}" />
+        <property name="timeout" value="${redis.timeOut}" />
+    </bean>
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="redisConnectionFactory" />
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+        </property>
+
+    </bean>
+    <!--拦截器配置-->
+    <bean id="methodCacheInterceptor" class="com.swj.ics.spring_redis.aop.MethodCacheInterceptor">
+        <property name="redisTemplate" ref="redisTemplate" />
+    </bean>
+    <!--配置Aop的切点和通知-->
+    <bean id="methodCachePointCut" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+        <property name="advice" ref="methodCacheInterceptor"/>
+        <property name="pattern" value=".*service.impl.*getTimestamps" />
+    </bean>
+<!--注册service bean-->
+    <bean id="redisTestService" class="com.swj.ics.spring_redis.service.impl.RedisTestServiceImpl">
+    </bean>
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+</beans>

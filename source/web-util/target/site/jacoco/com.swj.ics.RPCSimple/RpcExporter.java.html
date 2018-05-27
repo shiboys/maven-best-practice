@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RpcExporter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">web-util</a> &gt; <a href="index.source.html" class="el_package">com.swj.ics.RPCSimple</a> &gt; <span class="el_source">RpcExporter.java</span></div><h1>RpcExporter.java</h1><pre class="source lang-java linenums">package com.swj.ics.RPCSimple;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+/**
+ * Created by swj on 2017/1/3.
+ */
+<span class="nc" id="L18">public class RpcExporter&lt;T&gt; {</span>
+<span class="nc" id="L19">    static Executor threadPool= Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());</span>
+    public static void exporter(String hostName,int port) throws  Exception
+    {
+<span class="nc" id="L22">        ServerSocket serverSocket=new ServerSocket();</span>
+<span class="nc" id="L23">        serverSocket.bind(new InetSocketAddress(hostName,port));</span>
+
+        try {
+            while(true)
+            {
+<span class="nc" id="L28">                Socket clientSocket=serverSocket.accept();</span>
+<span class="nc" id="L29">                threadPool.execute(new ExporterThread(clientSocket));</span>
+<span class="nc" id="L30">            }</span>
+        }
+        finally {
+<span class="nc" id="L33">            serverSocket.close();</span>
+        }
+
+    }
+}
+class ExporterThread implements  Runnable
+{
+    private Socket client ;
+    public ExporterThread(Socket clientRequest)
+<span class="nc" id="L42">    {</span>
+<span class="nc" id="L43">        client=clientRequest;</span>
+<span class="nc" id="L44">    }</span>
+    @Override
+    public void run()   {
+<span class="nc" id="L47">        InputStream inputStream=null;</span>
+<span class="nc" id="L48">        ObjectOutputStream objectOutput=null;</span>
+        try {
+<span class="nc" id="L50">            inputStream = client.getInputStream();</span>
+<span class="nc" id="L51">            ObjectInputStream objectInput=new ObjectInputStream(inputStream);</span>
+<span class="nc" id="L52">            String className= objectInput.readUTF();</span>
+<span class="nc" id="L53">            Class&lt;?&gt; servicClass=Class.forName(className);</span>
+<span class="nc" id="L54">            String methodName=objectInput.readUTF();</span>
+<span class="nc" id="L55">            Class&lt;?&gt;[] parameterTypes= (Class&lt;?&gt;[])objectInput.readObject();</span>
+<span class="nc" id="L56">            Object[] args=(Object[])objectInput.readObject();</span>
+<span class="nc" id="L57">            Method method=servicClass.getMethod(methodName,parameterTypes);</span>
+<span class="nc" id="L58">            Object target=servicClass.newInstance();</span>
+<span class="nc" id="L59">            Object result= method.invoke(target,args);</span>
+<span class="nc" id="L60">            objectOutput=new ObjectOutputStream(client.getOutputStream());</span>
+<span class="nc" id="L61">            objectOutput.writeObject(result);//将服务端的方法返回结果序列化，并返回到客户端</span>
+<span class="nc" id="L62">        } catch (IOException e) {</span>
+<span class="nc" id="L63">            e.printStackTrace();</span>
+<span class="nc" id="L64">        } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L65">            e.printStackTrace();</span>
+<span class="nc" id="L66">        } catch (NoSuchMethodException e) {</span>
+<span class="nc" id="L67">            e.printStackTrace();</span>
+<span class="nc" id="L68">        } catch (InstantiationException e) {</span>
+<span class="nc" id="L69">            e.printStackTrace();</span>
+<span class="nc" id="L70">        } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L71">            e.printStackTrace();</span>
+<span class="nc" id="L72">        } catch (InvocationTargetException e) {</span>
+<span class="nc" id="L73">            e.printStackTrace();</span>
+        }
+
+        finally {
+<span class="nc bnc" id="L77" title="All 16 branches missed.">            if(inputStream!=null)</span>
+            {
+                try {
+<span class="nc" id="L80">                    inputStream.close();</span>
+<span class="nc" id="L81">                } catch (IOException e) {</span>
+<span class="nc" id="L82">                    e.printStackTrace();</span>
+<span class="nc" id="L83">                }</span>
+            }
+<span class="nc bnc" id="L85" title="All 16 branches missed.">            if(objectOutput!=null)</span>
+            {
+                try {
+<span class="nc" id="L88">                    objectOutput.close();</span>
+<span class="nc" id="L89">                } catch (IOException e) {</span>
+<span class="nc" id="L90">                    e.printStackTrace();</span>
+<span class="nc" id="L91">                }</span>
+            }
+<span class="nc bnc" id="L93" title="All 16 branches missed.">            if(client!=null)</span>
+            {
+                try {
+<span class="nc" id="L96">                    client.close();</span>
+<span class="nc" id="L97">                } catch (IOException e) {</span>
+<span class="nc" id="L98">                    e.printStackTrace();</span>
+<span class="nc" id="L99">                }</span>
+            }
+        }
+
+<span class="nc" id="L103">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

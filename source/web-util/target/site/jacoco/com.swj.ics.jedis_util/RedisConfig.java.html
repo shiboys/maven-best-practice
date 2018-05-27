@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RedisConfig.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">web-util</a> &gt; <a href="index.source.html" class="el_package">com.swj.ics.jedis_util</a> &gt; <span class="el_source">RedisConfig.java</span></div><h1>RedisConfig.java</h1><pre class="source lang-java linenums">package com.swj.ics.jedis_util;
+
+/**
+ * Created by swj on 2016/11/27.
+ */
+<span class="nc" id="L6">public class RedisConfig {</span>
+    //可用链接实例的最大数目，默认是8
+<span class="nc" id="L8">    public static int MAX_ACTIVE=1024;</span>
+    // 控制一个pool最多有多少个状态idle的jedis实例。默认也是8
+<span class="nc" id="L10">    public  static int MAX_IDLE=200;</span>
+
+    //等待可用链接的最大时间，单位是毫秒，默认是-1，表示永不超时。如果超过等待时间，则直接抛出JedisConnectionException
+<span class="nc" id="L13">    public static int MAX_WAIT=10000;</span>
+
+<span class="nc" id="L15">    public static int TIMEOUT=10000;</span>
+
+<span class="nc" id="L17">    public static int RETRY_TIMES=5;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

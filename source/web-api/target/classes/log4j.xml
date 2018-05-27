@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+    <appender name="ProgramError" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="encoding" value="UTF-8"/>
+        <param name="file" value="${tomcat.logs.dir}/ProgramError.txt"/>
+        <param name="DatePattern" value="'_'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss}`CXH`GroupName@ProgramName`%p`%l`%m`%X{uri}?%X{queryString}`%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="warn"/>
+        </filter>
+    </appender>
+
+    <appender name="ProgramRun" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="encoding" value="UTF-8"/>
+        <param name="file" value="${tomcat.logs.dir}/ProgramRun.txt"/>
+        <param name="DatePattern" value="'_'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss}`CXH`GroupName@ProgramName`%p`%l`%m`%X{uri}?%X{queryString}`%n"/>
+        </layout>
+        <!--限制输出级别 -->
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMax" value="INFO"/>
+        </filter>
+    </appender>
+
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender" >
+        <param name="encoding" value="UTF-8"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss}`CXH`GroupName@ProgramName`%p`%l`%m`%X{uri}?%X{queryString}`%n"/>
+        </layout>
+        <!--限制输出级别 -->
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="INFO"/>
+        </filter>
+    </appender>
+
+    <appender name="__ElapseRemote" class="org.apache.log4j.net.SyslogAppender">
+        <param name="SyslogHost" value="192.168.252.44:6003"/>
+        <!--151测试使用-->
+        <!--<param name="SyslogHost" value="10.168.100.151:5143"/>-->
+        <!--<param name="Facility" value="LOCAL7"/>-->
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="`%d{yyyy-MM-dd HH:mm:ss}`CXH`GroupName@ProgramName`%m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="ElapseRemote" class="org.apache.log4j.AsyncAppender">
+        <param name="BufferSize" value="100000"/>
+        <param name="Blocking" value="false" />
+        <appender-ref ref="__ElapseRemote"/>
+    </appender>
+
+    <appender name="ElapseLocal" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="${tomcat.logs.dir}/ElapseLocal.txt"/>
+        <param name="DatePattern" value="'_'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="`%d{yyyy-MM-dd HH:mm:ss}`CXH`GroupName@ProgramName`%m`%X{uri}?%X{queryString}%n"/>
+        </layout>
+    </appender>
+
+    <appender name="ElapseTimeOut" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="file" value="${tomcat.logs.dir}/ElapseTimeOut.txt"/>
+        <param name="DatePattern" value="'_'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="`%d{yyyy-MM-dd HH:mm:ss}`CXH`GroupName@ProgramName`%m`%X{uri}?%X{queryString}%n"/>
+        </layout>
+    </appender>
+
+    <appender name="UserOrder" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="encoding" value="UTF-8"/>
+        <param name="file" value="${tomcat.logs.dir}/UserOrder.txt"/>
+        <param name="DatePattern" value="'_'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss}`CXH`GroupName@ProgramName`%p`%l`%m`%X{uri}?%X{queryString}`%n"/>
+        </layout>
+    </appender>
+    <!--自定义appender或logger.....-->
+
+    <logger name="elapseLogger" additivity="false">
+        <level value="WARN"/>
+        <appender-ref ref="ElapseLocal"/>
+    </logger>
+
+    <logger name="elapseTimeOutLogger" additivity="false">
+        <level value="WARN"/>
+        <appender-ref ref="ElapseTimeOut"/>
+    </logger>
+
+    <logger name="userOrderLogger" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="UserOrder"/>
+    </logger>
+
+    <logger name="mvcUnitTestLogger" additivity="false">
+        <level value="INFO" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <root>
+        <level value="TRACE"/>
+        <appender-ref ref="ProgramError"/>
+        <appender-ref ref="ProgramRun"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</log4j:configuration>
