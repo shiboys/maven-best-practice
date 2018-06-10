@@ -1,0 +1,25 @@
+zookeeper DATDIR
+事务日志：zookeeper.out(zookeeper的运行日志)
+
+Watch机制
+1、可以监听数据节点的变更，删除，新增的事件
+2、特性：watcher是一次性的
+如何注册监听
+    1、getData,
+    2、exists
+    3、getChildren 监听子节点事件
+ 如何触发监听：
+ create,update,delete,
+ 事件类型
+ 
+ NodeDataChanged,
+ NodeCreated,
+ NodeDeleted
+ NodeChildrenChanged
+ 
+ watch机制的
+ 
+ sendThread
+ EventThread
+ 
+ 
