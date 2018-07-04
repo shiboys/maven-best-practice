@@ -100,7 +100,7 @@ real – 应用程序暂停的时间(Clock time). 由于串行垃圾收集器(Se
 -Xms10M
 -XX:+UseSerialGC
 -XX:MaxTenuringThreshold=1
--XX:+PrintGCDetails
+-XX:+PrintGCDetailsjvm详细参数说明.docx
 -XX:+PrintHeapAtGC
         * */
         Map<Integer,byte[]> map = new HashMap<>();

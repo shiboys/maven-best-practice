@@ -1,0 +1,37 @@
+zookeeper由来：
+1、防止单点故障
+集群方案（leader：follower）,还能分担请求
+2、每个节点的数据的一致性
+leader，master，
+3、Leader挂了之后，数据如何恢复？
+选举机制？恢复机制？
+4、如何保证数据的一致性？（分布式事务）
+    2PC 提交
+
+ 读请求，任何节点都能够处理
+ 写请求，也即是事务情况， 将请求转发给leader
+
+ ZAB协议：
+
+ 原子广播：
+
+ 1、zxId:64位自增的ID，每个请求分配一个ID
+ 2、leader:准备一个FIFO的队列，将带有zxId的消息分发给每一个节点
+ 3、每个follower收到消息好将propose事务写入磁盘，返回一个ack
+ 4：leader收到合法数量的ack请求，n/2+1，再发起commit请求
+leader的投票不需要observer的参与，必要和leader节点保持同步。
+
+ 崩溃恢复：
+1、当leader丢失过半节follower节点的消息
+2、当leader节点挂掉的时候。
+
+    1、已经被处理的消息不能丢
+    当leader收到合法数量的follower的ack消息之后，就会向各个
+    2、被丢弃的消息不能再出现。
+        当leader收到事务请求，并且还未发起事务投票之前，leader挂了
+
+ zab的设计思想
+    1、zxId最大。
+    2、epoch的概念，每产生一个新的leader，那么新的leader的epoch会+1，zxId是64位的
+        低32位的是消息计数器（递增的），高32位的（epoch编号）
+
