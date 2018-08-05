@@ -21,7 +21,7 @@ public class ActiveMqProducer {
     //事务、回话
     private Session session;
     
-    ThreadLocal<MessageProducer> messageProducerThreadLocal;
+    ThreadLocal<MessageProducer> messageProducerThreadLocal = new ThreadLocal<>();
     AtomicInteger atomicCounter = new AtomicInteger(0);
     public void init() {
         connectionFactory = new ActiveMQConnectionFactory(ActiveMqConfig.USER_NAME,
@@ -29,17 +29,11 @@ public class ActiveMqProducer {
         try {
             connection = connectionFactory.createConnection();
             //创建一个带事务的回话
-            session = connection.createSession(Boolean.TRUE,Session.AUTO_ACKNOWLEDGE);
+            connection.start();//开启连接，刚才忘记这块了
+            //创建一个事务
+            session = connection.createSession(Boolean.TRUE,Session.SESSION_TRANSACTED);
         } catch (JMSException e) {
             e.printStackTrace();
-        } finally {
-            if(connection != null) {
-                try {
-                    connection.close();
-                } catch (JMSException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
     
