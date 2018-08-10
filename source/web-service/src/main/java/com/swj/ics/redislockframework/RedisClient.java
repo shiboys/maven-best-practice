@@ -79,7 +79,7 @@ public class RedisClient {
         Jedis client = jedisPool.getResource();
         try {
            Long longValue = client.setnx(key,value);
-           System.out.println("setnx key =" + key + " value=" + value +" result=" + longValue);
+           //System.out.println("setnx key =" + key + " value=" + value +" result=" + longValue);
            return longValue;
         } finally {
             jedisPool.returnResource(client);
@@ -204,7 +204,6 @@ public class RedisClient {
     public boolean delKey(String key) {
         Jedis client =  jedisPool.getResource();
         try {
-            System.out.println("del key : "+key);
             client.del(key);
             return true;
         } finally {

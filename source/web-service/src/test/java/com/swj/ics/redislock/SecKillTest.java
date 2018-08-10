@@ -6,7 +6,6 @@ import com.swj.ics.redislockframework.CacheLockInterceptor;
 import org.junit.Test;
 
 /**
- * Created by swj on 2017/11/26.
  */
 public class SecKillTest {
     

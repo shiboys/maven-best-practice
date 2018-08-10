@@ -1,7 +1,6 @@
 package com.swj.ics.redislockframework;
 
 /**
- * Created by swj on 2017/11/20.
  */
 public class CacheLockException extends Throwable {
     private String msg;

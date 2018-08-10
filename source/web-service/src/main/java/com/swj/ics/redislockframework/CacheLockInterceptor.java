@@ -4,9 +4,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
-/**
- * Created by swj on 2017/11/26.
- */
 public class CacheLockInterceptor implements InvocationHandler {
     public static int ERROR_COUNT = 1;
     //真正被代理的对象
@@ -54,6 +51,7 @@ public class CacheLockInterceptor implements InvocationHandler {
                 } else if (annotations[i][j] instanceof LockedComplexObject) {
                     String fieldName = ((LockedComplexObject)annotations[i][j]).field();
                     try {
+                        //todo这里应该是获取属性值
                        return  args[i].getClass().getField(fieldName);
                     } catch (NoSuchFieldException e) {
                         throw new CacheLockException("被注解的参数对象中没有该属性：" + fieldName);

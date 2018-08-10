@@ -3,7 +3,6 @@ package com.swj.ics.redislockframework;
 import java.util.Random;
 
 /**
- * Created by swj on 2017/11/26.
  */
 public class RedisLock {
     //纳秒和毫秒之间的转换。1秒 =1000毫秒 。1毫秒= 1000*1000L

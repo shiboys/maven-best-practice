@@ -8,7 +8,7 @@ import redis.clients.jedis.JedisPool;
 public class RedisFactory {
     
     public static RedisClient getDefaultClient() {
-        JedisPool jedisPool = new JedisPool("192.168.0.109",6379);
+        JedisPool jedisPool = new JedisPool("10.168.99.172",29007);
         return new RedisClient(jedisPool);
     }
 }

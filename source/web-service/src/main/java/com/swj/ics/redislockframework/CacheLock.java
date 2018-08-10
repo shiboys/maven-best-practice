@@ -7,7 +7,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by swj on 2017/11/20.
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME) //驻留方式，运行时驻留
