@@ -378,6 +378,19 @@
                 <version>5.7.0</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.jboss.marshalling</groupId>
+                <artifactId>jboss-marshalling</artifactId>
+                <version>1.4.11.Final</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.jboss.marshalling/jboss-marshalling-serial -->
+            <dependency>
+                <groupId>org.jboss.marshalling</groupId>
+                <artifactId>jboss-marshalling-serial</artifactId>
+                <version>1.4.11.Final</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -491,5 +504,30 @@
             </resource>
         </resources>
     </build>
+
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Repository Switchboard</name>
+            <layout>default</layout>
+            <url>http://repo1.maven.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <updatePolicy>interval:1</updatePolicy>
+            </releases>
+        </repository>
+        <repository>
+            <id>sourceforge-releases</id>
+            <name>sourceforge-releases</name>
+            <url>https://oss.sonatype.org/content/repositories/sourceforge-releases</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+    </repositories>
 
 </project>
