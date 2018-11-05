@@ -11,8 +11,7 @@ public class SecKillTest {
     
     private static long commodityId1 = 1001L;
     private static long commodityId2 = 1002L;
-    
-    private static final String ip = "192.168.0.109";
+
     
     @Test
     public void  testSecKill() {
@@ -77,8 +76,8 @@ public class SecKillTest {
             //主线程等待结束信号量
             endCountDown.await();
             
-            System.out.println(SecKillImpl.inventory.get(commodityId1));
-            System.out.println(SecKillImpl.inventory.get(commodityId2));
+            //System.out.println(SecKillImpl.inventory.get(commodityId1));
+            //System.out.println(SecKillImpl.inventory.get(commodityId2));
             System.out.println("error count :" + CacheLockInterceptor.ERROR_COUNT);
             System.out.println("total cost time :" +(System.currentTimeMillis() - startTime));
         } catch (InterruptedException e) {

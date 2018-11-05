@@ -15,7 +15,7 @@ public class InboxAndUnBox {
         int c = 3;
         Integer d = 3;
         /*
-        * 结果为 false,true
+        * 结果为 false,true，true
         * */
         System.out.println(a == b);
         System.out.println(a == c);

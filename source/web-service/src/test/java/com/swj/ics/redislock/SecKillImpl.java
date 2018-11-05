@@ -32,6 +32,7 @@ public class SecKillImpl implements SecKillInterface {
              return -1L;
          }
          long currAmount = inventory.get(commodityId);
+        System.out.println("当前线程"+Thread.currentThread().getName()+"获取锁,抢到商品"+commodityId);
         inventory.put(commodityId,currAmount - 1);
         return inventory.get(commodityId);
     }

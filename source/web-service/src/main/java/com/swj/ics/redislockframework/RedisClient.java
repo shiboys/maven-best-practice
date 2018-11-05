@@ -10,7 +10,6 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
 /**
- * Created by swj on 2017/11/20.
  */
 public class RedisClient {
     private JedisPool jedisPool;

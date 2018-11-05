@@ -28,10 +28,11 @@ public class CacheLockInterceptor implements InvocationHandler {
         //这里的参数key一定是普通类型或者普通类型的Box装箱类型，或者可以使复杂类型的
         //field字段指定的普通类型，
         RedisLock redisLock = new RedisLock(cacheLock.lockedPrefix(),objectValue);
+       // RedisExpireLock redisLock = new RedisExpireLock(cacheLock.lockedPrefix(),objectValue);
         boolean isLocked = redisLock.lock(cacheLock.timeOut(),cacheLock.expireTime());
         if (!isLocked) { //如果获取锁失败
             ERROR_COUNT += 1;
-            throw new CacheLockException(" get the lock failed");
+            System.out.println(" get the lock failed");
         }
         try {
           return  method.invoke(this.proxied,args);
