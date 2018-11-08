@@ -179,11 +179,6 @@
 
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.jboss.marshalling/jboss-marshalling-serial -->
-    <dependency>
-        <groupId>org.jboss.marshalling</groupId>
-        <artifactId>jboss-marshalling-serial</artifactId>
-</dependency>
 
 
 

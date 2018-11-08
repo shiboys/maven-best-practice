@@ -1,19 +1,25 @@
 package com.swj.ics.netty_study.protobuf;
 
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelHandlerInvoker;
-import io.netty.util.concurrent.EventExecutorGroup;
-
 /**
  * author shiweijie
  * date 2018/11/5 上午9:37
  */
 public class ServerProtoBufMsgHandler extends ChannelHandlerAdapter {
 
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("server channel active : " );
+
+    }
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+
+        System.out.println("server channel read : " );
+
         SubscribeReqProto.SubscribeReq subscribeReq = (SubscribeReqProto.SubscribeReq) msg;
         if (subscribeReq == null) {
             ctx.writeAndFlush(responseNull());
@@ -26,7 +32,7 @@ public class ServerProtoBufMsgHandler extends ChannelHandlerAdapter {
         if ("shiboys".equals(subscribeReq.getUsername())) {
 
             ctx.writeAndFlush(responseWithMessage(subscribeReq.getSubReqId()));
-        } else {
+        }    else {
             ctx.writeAndFlush(responseNull());
         }
     }

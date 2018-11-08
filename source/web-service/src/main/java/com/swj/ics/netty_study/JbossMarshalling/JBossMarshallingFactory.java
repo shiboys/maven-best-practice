@@ -19,8 +19,8 @@ public class JBossMarshallingFactory {
     //对开发者而言，只需要正确的将编码器和解码器加入到ChannelPipeline中个，就能实现对Marshalling序列化的支持。
     public static MarshallingDecoder buildMarshallingDecoder() {
 
-        MarshallerFactory factory = Marshalling.getProvidedMarshallerFactory("serial");
-        MarshallingConfiguration configuration = new MarshallingConfiguration();
+        final MarshallerFactory factory = Marshalling.getProvidedMarshallerFactory("serial");
+        final MarshallingConfiguration configuration = new MarshallingConfiguration();
         configuration.setVersion(5);
         UnmarshallerProvider provider = new DefaultUnmarshallerProvider(factory,configuration);
         MarshallingDecoder decoder = new MarshallingDecoder(provider,1024);
@@ -28,8 +28,8 @@ public class JBossMarshallingFactory {
     }
     
     public static MarshallingEncoder buildMarshallingEncoder() {
-        MarshallerFactory factory = Marshalling.getProvidedMarshallerFactory("serial");
-        MarshallingConfiguration configuration = new MarshallingConfiguration();
+        final MarshallerFactory factory = Marshalling.getProvidedMarshallerFactory("serial");
+        final MarshallingConfiguration configuration = new MarshallingConfiguration();
         configuration.setVersion(5);
         MarshallerProvider provider =new DefaultMarshallerProvider(factory,configuration);
         MarshallingEncoder encoder = new MarshallingEncoder(provider);
