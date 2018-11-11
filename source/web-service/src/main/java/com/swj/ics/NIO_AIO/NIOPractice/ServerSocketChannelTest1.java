@@ -45,14 +45,15 @@ public class ServerSocketChannelTest1 {
             try {
                 serverChannel = ServerSocketChannel.open();
                 serverChannel.configureBlocking(false);
+                
+                //创建选择器
                 selector = Selector.open();
-
-                int ops = SelectionKey.OP_ACCEPT;
-                // serverSocketChannel 只关心Accept事件
-                serverChannel.register(selector, ops);
 
                 //设置服务端监听的端口，并设置最大链接缓冲数为100。
                 serverChannel.bind(localAddress, 100);
+
+                // serverSocketChannel 只关心Accept事件
+                serverChannel.register(selector,  SelectionKey.OP_ACCEPT);
 
                 System.out.println("服务端启动，端口：" + localAddress.getPort());
                 while (!Thread.currentThread().isInterrupted()) {
@@ -62,18 +63,21 @@ public class ServerSocketChannelTest1 {
                     }
                     Set<SelectionKey> keys = selector.selectedKeys();
                     Iterator<SelectionKey> it = keys.iterator();
-                    SelectionKey selectionKey = it.next();
-                    it.remove(); //防止下次同一个事件再次到达
+                    while (it.hasNext()) { //这里有个天大的bug .忘记while循环遍历key 了
+                        SelectionKey selectionKey = it.next();
+                        it.remove(); //防止下次同一个事件再次到达
+                        if (selectionKey.isAcceptable()) {
+                            acceptClientChannel(selector,serverChannel);
+                        }
+                        if (selectionKey.isReadable()) { //通道感兴趣的读事件且底层有数据可读
+                            readDataFromClient(selectionKey);
+                        }
+                        if (selectionKey.isWritable()) {
+                            writeDataToClient(selectionKey);
+                        }
 
-                    if (selectionKey.isAcceptable()) {
-                        acceptClientChannel(selector,serverChannel);
-                    } else if (selectionKey.isReadable()) { //通道感兴趣的读事件且底层有数据可读
-                        readDataFromClient(selectionKey);
-                    } else if (selectionKey.isWritable()) {
-                        writeDataToClient(selectionKey);
+                        Thread.sleep( random.nextInt(500));
                     }
-
-                    Thread.sleep(500 + random.nextInt(500));
                 }
 
             } catch (IOException e) {
@@ -84,6 +88,8 @@ public class ServerSocketChannelTest1 {
             } finally {
                 try {
                     serverChannel.close();
+                    //这里不能忘记 selector 关闭
+                    selector.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -93,11 +99,12 @@ public class ServerSocketChannelTest1 {
 
         void acceptClientChannel(Selector selector,ServerSocketChannel serverSocketChannel) {
             try {
+                //accept方法返回一个普通的通道，每个通道在内核中都对应一个socket缓冲区
                 SocketChannel socketChannel = serverSocketChannel.accept();
                 socketChannel.configureBlocking(false);
                 socketChannel.register(selector, SelectionKey.OP_READ, new Buffers(256, 256));
                 //服务端开启的这个 channel也要设置为非阻塞
-                System.out.println("receive client request from : " + socketChannel.getRemoteAddress());
+                System.out.println("accept client request from : " + socketChannel.getRemoteAddress());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -109,11 +116,11 @@ public class ServerSocketChannelTest1 {
             ByteBuffer readBuffer = buffers.getReadBuffer();
             SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
 
-            int readLength = socketChannel.read(readBuffer);
+            socketChannel.read(readBuffer);
             readBuffer.flip();
 
-           /* byte[] bytes = new byte[readLength];
-            readBuffer.put(bytes);*/
+            //byte[] bytes = new byte[readBuffer.limit()];
+           // readBuffer.put(bytes); 
             CharBuffer charBuffer = CHARSET_UTF8.decode(readBuffer);
 
             System.out.println("client message :" + new String(charBuffer.array()));
@@ -123,17 +130,20 @@ public class ServerSocketChannelTest1 {
 
             ByteBuffer writeBuffer = buffers.getWriteBuffer();
             writeBuffer.put("echo from server : ".getBytes(FileNIODemo.CHARSET_NAME_UTF8));
-            //writeBuffer.put(readBuffer);
+            writeBuffer.put(readBuffer);
 
             readBuffer.clear();
 
-            selectionKey.interestOps(selectionKey.interestOps() & SelectionKey.OP_WRITE);
+            //这里写错误了，注册某个事件 是使用 | 逻辑或运算的
+            selectionKey.interestOps(selectionKey.interestOps() | SelectionKey.OP_WRITE);
         }
 
         void writeDataToClient(SelectionKey selectionKey) throws IOException {
             SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
             Buffers buffers = (Buffers) selectionKey.attachment();
             ByteBuffer writeBuffer = buffers.getWriteBuffer();
+            //这里忘记调用flip 因为下次通道新数据过来，如果不调用，用的还是第一次写入的数据
+            writeBuffer.flip();
 
             int writeLength = 0;
             while (writeBuffer.hasRemaining()) {

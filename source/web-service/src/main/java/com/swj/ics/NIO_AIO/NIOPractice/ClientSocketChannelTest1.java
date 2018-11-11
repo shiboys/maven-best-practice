@@ -31,8 +31,10 @@ public class ClientSocketChannelTest1 {
 
         @Override
         public void run() {
+
+            Selector selector = null;
             try {
-                Selector selector = Selector.open();
+                selector = Selector.open();
                 SocketChannel socketChannel = SocketChannel.open();
                 socketChannel.configureBlocking(false);
                 int ops = SelectionKey.OP_READ | SelectionKey.OP_WRITE;
@@ -44,6 +46,11 @@ public class ClientSocketChannelTest1 {
                     ;
                 }
                 System.out.println(clientName + " finish connect..");
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("client " + clientName +" connected failed");
+            }
+            try {
                 int counter = 1;
 
                 while (!Thread.currentThread().isInterrupted()) {
@@ -54,23 +61,25 @@ public class ClientSocketChannelTest1 {
                     Iterator<SelectionKey> iterator = keySet.iterator();
                     while (iterator.hasNext()) {
                         SelectionKey selectionKey = iterator.next();
-
+                        iterator.remove();
                         if (selectionKey.isReadable()) {
-
                             readDataFromServer(selectionKey);
-
-                        } else if(selectionKey.isWritable()) {
+                        } //这里不能使用else if 是因为可能同时有读事件和写事件
+                        if(selectionKey.isWritable()) {
                             writeDataToServer(selectionKey,counter);
                             counter++;
                         }
-
-                        iterator.remove();
+                        //这里必须暂停线程一段时间，模拟客户端准备数据，
+                        //
+                        Thread.sleep(1000 + random.nextInt(1000));
                     }
                 }
 
 
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                    e.printStackTrace();
             }
 
         }
@@ -97,8 +106,9 @@ public class ClientSocketChannelTest1 {
         void writeDataToServer(SelectionKey selectionKey,int counter) throws IOException {
             SocketChannel socketChannel = (SocketChannel)selectionKey.channel();
             Buffers buffers= (Buffers) selectionKey.attachment();
-            byte[] writeBytes =
-                    (clientName + counter +" request !").getBytes(FileNIODemo.CHARSET_NAME_UTF8);
+            String clientMsg = clientName + counter +" request !";
+            System.out.println("client sent message : " + clientMsg);
+            byte[] writeBytes = clientMsg.getBytes(FileNIODemo.CHARSET_NAME_UTF8);
             ByteBuffer writeBuffer = buffers.getWriteBuffer();
             writeBuffer.put(writeBytes);
             writeBuffer.flip();
@@ -113,19 +123,19 @@ public class ClientSocketChannelTest1 {
         int port = 8080;
         String host = "localhost";
         Thread threadA = new Thread(new ClientRunnable(port,host,"thread-A"));
-       // Thread threadB = new Thread(new ClientRunnable(port,host,"thread-B"));
-        //Thread threadC = new Thread(new ClientRunnable(port,host,"thread-C"));
-        //Thread threadD = new Thread(new ClientRunnable(port,host,"thread-D"));
+         Thread threadB = new Thread(new ClientRunnable(port,host,"thread-B"));
+        Thread threadC = new Thread(new ClientRunnable(port,host,"thread-C"));
+        Thread threadD = new Thread(new ClientRunnable(port,host,"thread-D"));
 
         threadA.start();
-       // threadB.start();
-       // threadC.start();
+        threadB.start();
+        threadC.start();
         Thread.sleep(10000);
 
         //线程A结束运行
-        threadA.interrupt();
+        threadB.interrupt();
 
-        //threadD.start();
+         threadD.start();
     }
 }
 
