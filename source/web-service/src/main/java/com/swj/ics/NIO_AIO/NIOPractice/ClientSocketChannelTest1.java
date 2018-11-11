@@ -8,6 +8,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -20,6 +21,7 @@ public class ClientSocketChannelTest1 {
 
         private InetSocketAddress remoteAddress = null;
         private String clientName;
+        private static final Random random = new Random();
 
 
         public ClientRunnable(int port,String host,String clientName) {
@@ -52,7 +54,7 @@ public class ClientSocketChannelTest1 {
                     Iterator<SelectionKey> iterator = keySet.iterator();
                     while (iterator.hasNext()) {
                         SelectionKey selectionKey = iterator.next();
-                        iterator.remove();
+
                         if (selectionKey.isReadable()) {
 
                             readDataFromServer(selectionKey);
@@ -61,6 +63,8 @@ public class ClientSocketChannelTest1 {
                             writeDataToServer(selectionKey,counter);
                             counter++;
                         }
+
+                        iterator.remove();
                     }
                 }
 
@@ -94,7 +98,7 @@ public class ClientSocketChannelTest1 {
             SocketChannel socketChannel = (SocketChannel)selectionKey.channel();
             Buffers buffers= (Buffers) selectionKey.attachment();
             byte[] writeBytes =
-                    (clientName + counter +" request !").getBytes(Charset.forName(FileNIODemo.CHARSET_NAME_UTF8));
+                    (clientName + counter +" request !").getBytes(FileNIODemo.CHARSET_NAME_UTF8);
             ByteBuffer writeBuffer = buffers.getWriteBuffer();
             writeBuffer.put(writeBytes);
             writeBuffer.flip();
@@ -109,19 +113,19 @@ public class ClientSocketChannelTest1 {
         int port = 8080;
         String host = "localhost";
         Thread threadA = new Thread(new ClientRunnable(port,host,"thread-A"));
-        Thread threadB = new Thread(new ClientRunnable(port,host,"thread-B"));
-        Thread threadC = new Thread(new ClientRunnable(port,host,"thread-C"));
-        Thread threadD = new Thread(new ClientRunnable(port,host,"thread-D"));
+       // Thread threadB = new Thread(new ClientRunnable(port,host,"thread-B"));
+        //Thread threadC = new Thread(new ClientRunnable(port,host,"thread-C"));
+        //Thread threadD = new Thread(new ClientRunnable(port,host,"thread-D"));
 
         threadA.start();
-        threadB.start();
-        threadC.start();
+       // threadB.start();
+       // threadC.start();
         Thread.sleep(10000);
 
         //线程A结束运行
         threadA.interrupt();
 
-        threadD.start();
+        //threadD.start();
     }
 }
 

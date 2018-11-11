@@ -19,8 +19,6 @@ import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.SelectKey;
-
 /**
  * author shiweijie
  * date 2018/11/8 下午7:45
@@ -118,14 +116,14 @@ public class ServerSocketChannelTest1 {
             readBuffer.put(bytes);*/
             CharBuffer charBuffer = CHARSET_UTF8.decode(readBuffer);
 
-            System.out.println("client message :" + charBuffer.array());
+            System.out.println("client message :" + new String(charBuffer.array()));
 
             //重新讲读取的内容置为0
             readBuffer.rewind();
 
             ByteBuffer writeBuffer = buffers.getWriteBuffer();
             writeBuffer.put("echo from server : ".getBytes(FileNIODemo.CHARSET_NAME_UTF8));
-            writeBuffer.put(readBuffer);
+            //writeBuffer.put(readBuffer);
 
             readBuffer.clear();
 
