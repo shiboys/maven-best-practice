@@ -170,15 +170,23 @@ public class ServerSocketChannelTest1 {
             System.out.println("file not exists ");
             return;
         }
-        String sqlBuffer = " insert into cms_search_keyword(key_word) values ('%s');";
+        String line = "";
+
+        String sqlBuffer = " insert into search_brochure_words(brochureId,keyWord) values (%s, '%s');";
+        //" insert into cms_search_keyword(key_word) values ('%s');";
+        String[] lineArr = null;
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
-
-            String line = reader.readLine();
-
-            while (!StringUtils.isEmpty(line)) {
-                System.out.println(String.format(sqlBuffer,line.trim()));
+            String header =  reader.readLine();
+            //String[] headerArr = header.split(",");
+            line = reader.readLine();
+            lineArr = line.split(",");
+            while (!StringUtils.isEmpty(line) && lineArr.length > 0) {
+                System.out.println(String.format(sqlBuffer,lineArr[0],lineArr[1]));
                 line = reader.readLine();
+                if(!StringUtils.isEmpty(line)) {
+                    lineArr = line.split(",");
+                }
             }
 
         } catch ( Exception e) {
@@ -189,12 +197,15 @@ public class ServerSocketChannelTest1 {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        Thread serverThread = new Thread(new ServerRunnable(8080));
+       /* Thread serverThread = new Thread(new ServerRunnable(8080));
         serverThread.start();
         Thread.sleep(100000);
 
         //结束服务端线程的运行。
-        serverThread.interrupt();
+        serverThread.interrupt();*/
+
+        String filePath = "/Volumes/work/allin/需求文档2018/锦囊召唤词.csv";
+        writeSqlToConsole(filePath);
 
     }
 }
