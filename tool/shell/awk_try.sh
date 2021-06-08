@@ -17,3 +17,4 @@
  #统计 /etc/passwd 中每行的行号，每行的列数，对应的完整内容
  awk -F ':' '{print NR "\t" NF "\t" $0}' /etc/passwd
 
+
