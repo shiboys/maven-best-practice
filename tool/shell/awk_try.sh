@@ -16,4 +16,38 @@
  awk '/root/ {print $0}' /etc/passwd
  #统计 /etc/passwd 中每行的行号，每行的列数，对应的完整内容
  awk -F ':' '{print NR "\t" NF "\t" $0}' /etc/passwd
- # GIT push FUCK
+ #  接下来，演示 awk 的报表分析功能
+# 统计报表：合计每人 1 月份的工资，0：manager，1：worker ，数据源参照 employee.TXT
+# 打印出如下效果
+# vivi	2800
+# Tom	2500
+# John	4500
+awk '{split($3,date,"-");if(date[2]=="01") {name[$1]+=$5}} END{for(i in name) {print i "\t" name[i]}}' awk.txt
+
+# 输出 名称，role，1月份薪水之和
+awk '{split($3,date,"-");if(date[2]=="01") {name[$1]+=$5};if($2=="0"){role[$1]="manager"}else{role[$1]="worker"}} END{for(i in name) {print i "\t" name[i] "\t" role[i]}}' awk.txt
+# vivi	2800	worker
+# Tom	2500	manager
+# John	4500	worker
+# 格式化之后的 awk 脚本，放在 AWK.SH
+
+{
+	split($3,date,"-");
+	if(date[2]=="01") {
+		name[$1]+=$5
+	};
+	if($2=="0"){
+		role[$1]="manager"
+	} else{
+		role[$1]="worker"
+	}
+}
+END {
+	for(i in name){
+		print i "\t" name[i] "\t" role[i]
+	}
+}
+# 执行命令
+awk -f awk.sh awk.txt
+# 结果完全一样
+
