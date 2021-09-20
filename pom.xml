@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.autohome.dealer.ics.maven-best-practice</groupId>
+    <groupId>com.swj.java.maven-best-practice</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -13,6 +13,7 @@
         <module>source/web-util</module>
         <module>source/web-service</module>
         <module>source/web-dao</module>
+        <module>custom-inverted-index</module>
     </modules>
 
     <properties>
@@ -311,6 +312,11 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>${apache-commons.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${apache-commons.version}</version>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
             <dependency>
                 <groupId>io.netty</groupId>
@@ -371,7 +377,11 @@
                 <artifactId>curator-recipes</artifactId>
                 <version>2.4.2</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>1.8.2</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-core</artifactId>
@@ -384,7 +394,16 @@
                 <version>1.4.11.Final</version>
             </dependency>
 
-
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-analyzers-common</artifactId>
+                <version>7.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.16.20</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -172,8 +172,8 @@ public class ServerSocketChannelTest1 {
         }
         String line = "";
 
-        String sqlBuffer = " insert into search_brochure_words(brochureId,keyWord) values (%s, '%s');";
-        //" insert into cms_search_keyword(key_word) values ('%s');";
+        //String sqlBuffer = " insert into search_brochure_words(brochureId,keyWord) values (%s, '%s');";
+        String sqlBuffer = " insert into cms_search_keyword(key_word) values ('%s');";
         String[] lineArr = null;
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
@@ -182,7 +182,11 @@ public class ServerSocketChannelTest1 {
             line = reader.readLine();
             lineArr = line.split(",");
             while (!StringUtils.isEmpty(line) && lineArr.length > 0) {
-                System.out.println(String.format(sqlBuffer,lineArr[0],lineArr[1]));
+                if(lineArr.length > 1) {
+                    System.out.println(String.format(sqlBuffer,lineArr[0],lineArr[1]));
+                } else {
+                    System.out.println(String.format(sqlBuffer,lineArr[0]));
+                }
                 line = reader.readLine();
                 if(!StringUtils.isEmpty(line)) {
                     lineArr = line.split(",");
@@ -204,7 +208,7 @@ public class ServerSocketChannelTest1 {
         //结束服务端线程的运行。
         serverThread.interrupt();*/
 
-        String filePath = "/Volumes/work/allin/需求文档2018/锦囊召唤词.csv";
+        String filePath = "/Volumes/work/allin/需求文档2018/联想词11-19.csv";
         writeSqlToConsole(filePath);
 
     }
