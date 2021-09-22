@@ -14,7 +14,7 @@ import java.util.Map;
 public class ParsedDocumentMetrics {
     private int totalDocumentSize;
     private ParsedDocument parsedDocument;
-    // the true posing list in memory.
+    // the real posting list in memory.
     private ImmutableMap<String, TermDocumentPostingList> termPostingsMap;
 
     // metrics
