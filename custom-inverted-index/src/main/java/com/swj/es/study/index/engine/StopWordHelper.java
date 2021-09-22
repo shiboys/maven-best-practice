@@ -18,7 +18,13 @@ import java.util.Set;
 @Slf4j
 public class StopWordHelper {
 
-    public static Set<String> getAllDefaultStopWords() {
+    private StopWordHelper () {
+
+    }
+
+    private static Set<String> stopWordsSet = getAllDefaultStopWords();
+
+    private static Set<String> getAllDefaultStopWords() {
         ClassLoader classLoader = StopWordHelper.class.getClassLoader();
         String filePath = "stopwords/en.txt";
         InputStream fileWordsStream = classLoader.getResourceAsStream(filePath);
@@ -41,5 +47,12 @@ public class StopWordHelper {
             log.error("failed to parse the stop word file.[filePath='{}']", filePath, e);
         }
         return stopWords;
+    }
+
+    public static boolean isStopWords(String word) {
+        if(word == null || word.isEmpty()) {
+            return true;
+        }
+        return stopWordsSet.contains(word);
     }
 }

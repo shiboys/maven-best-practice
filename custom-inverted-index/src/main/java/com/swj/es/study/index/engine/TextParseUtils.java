@@ -28,11 +28,12 @@ public class TextParseUtils {
         return stemmer.getCurrent();
     }
 
-    public List<String> tokenizer(String rawText) {
+    public static List<String> tokenizer(String rawText) {
         if (rawText == null || rawText.isEmpty()) {
             return Collections.emptyList();
         }
         List<String> tokenWords = new LinkedList<>();
+        // todo : analyzer 这里使用 final 变量是否有问题
         try (TokenStream tokenStream = analyzer.tokenStream(null, rawText)) {
             CharTermAttribute termAttribute = tokenStream.getAttribute(CharTermAttribute.class);
             tokenStream.reset();
