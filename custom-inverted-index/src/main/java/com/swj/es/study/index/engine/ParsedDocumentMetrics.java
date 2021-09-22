@@ -45,7 +45,7 @@ public class ParsedDocumentMetrics {
         return parsedDocument;
     }
 
-    private double getDocumentMagnitude() {
+    public double getDocumentMagnitude() {
         if (magnitude == null) {
             double sumMagnitude = 0;
             for (Map.Entry<String, Double> wordEntry : tfIdfCache.entrySet()) {
