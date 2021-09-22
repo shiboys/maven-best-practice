@@ -35,7 +35,7 @@ public class ParsedDocument {
         wordFrequencyMap = ImmutableMap.copyOf(wordCountMap);
     }
 
-    public int getWordCountFrequency(String word) {
+    public int getWordFrequency(String word) {
         return wordFrequencyMap.getOrDefault(word, 0);
     }
 
