@@ -75,6 +75,6 @@ public class ParsedDocumentMetrics {
         if (!termPostingsMap.containsKey(word)) {
             return 0;
         }
-        return termPostingsMap.get(word).getDocumentList().size();
+        return termPostingsMap.get(word).getUniqueDocuments().size();
     }
 }

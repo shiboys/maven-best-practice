@@ -53,6 +53,7 @@ public class DocumentParser {
         // to lower case
         rawText = rawText.toLowerCase();
 
+        // 这里没有使用静态方法，是因为 util 的 analyzer 对象必须是非静态的
         List<String> wordList = TextParseUtils.tokenizer(rawText);
         List<TermPosition> termPositionList = new LinkedList<>();
         int position = 0;
