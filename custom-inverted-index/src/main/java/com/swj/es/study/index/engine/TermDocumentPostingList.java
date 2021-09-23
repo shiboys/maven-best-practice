@@ -1,8 +1,10 @@
 package com.swj.es.study.index.engine;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author shiweijie
@@ -13,17 +15,17 @@ import java.util.List;
 public class TermDocumentPostingList {
     String word;
     List<DocumentPosting> postingList;
-    List<ParsedDocument> documentList;
+    Set<ParsedDocument> uniqueDocuments;
 
     public TermDocumentPostingList(String word) {
         this.word = word;
         this.postingList = new LinkedList<>();
-        this.documentList = new LinkedList<>();
+        this.uniqueDocuments = new HashSet<>();
     }
 
     public void addTermToPosting(TermPosition termPosition, ParsedDocument parsedDocument) {
         postingList.add(new DocumentPosting(termPosition,parsedDocument));
-        documentList.add(parsedDocument);
+        uniqueDocuments.add(parsedDocument);
     }
 
     public String getWord() {
@@ -34,7 +36,7 @@ public class TermDocumentPostingList {
         return postingList;
     }
 
-    public List<ParsedDocument> getDocumentList() {
-        return documentList;
+    public Set<ParsedDocument> getUniqueDocuments() {
+        return uniqueDocuments;
     }
 }

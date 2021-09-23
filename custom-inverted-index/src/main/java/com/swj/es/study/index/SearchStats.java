@@ -10,5 +10,5 @@ import lombok.Data;
 @Data
 public class SearchStats {
     private int documentsSearched;
-    private int durationNanos;
+    private long durationNanos;
 }
