@@ -2,12 +2,15 @@ package com.swj.es.study.index.engine;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.swj.es.study.index.Document;
 import com.swj.es.study.index.SearchResult;
 import com.swj.es.study.index.SearchResultBatch;
 import com.swj.es.study.index.SearchStats;
 import com.swj.es.study.index.TextSearchIndex;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -18,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,6 +29,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0.0
  * @since 2021/09/22 11:56
  */
+@Slf4j
 public class InvertedIndex implements TextSearchIndex {
 
   private static int THREAD_POOL_SIZE = Math.max(1, Runtime.getRuntime().availableProcessors());
@@ -49,8 +54,10 @@ public class InvertedIndex implements TextSearchIndex {
     for (ParsedDocument parsedDocument : corpus.getParsedDocuments()) {
       for (TermPosition termPosition : parsedDocument.getDocumentTerms()) {
         final String word = termPosition.getWord();
-        postingListMap.putIfAbsent(word, new TermDocumentPostingList(word)).addTermToPosting(termPosition,
-            parsedDocument);
+        if (!postingListMap.containsKey(word)) {
+          postingListMap.put(word, new TermDocumentPostingList(word));
+        }
+        postingListMap.get(word).addTermToPosting(termPosition, parsedDocument);
       }
     }
     termPostingListMap = ImmutableMap.copyOf(postingListMap);
@@ -66,30 +73,46 @@ public class InvertedIndex implements TextSearchIndex {
   public SearchResultBatch search(String searchTerm, int maxResults) {
     Stopwatch stopwatch = Stopwatch.createStarted();
 
-    Document searchingDocument = new Document(searchTerm, null);
+    Document searchingDocument = new Document(searchTerm, new Object());
     ParsedDocument searchingParsedDocument = searchingTermParser.parseDocument(searchingDocument);
     Set<ParsedDocument> relevantDocumentSet = getRelevantDocumentSet(searchingParsedDocument);
     if (relevantDocumentSet.isEmpty()) {
       return buildSearchResult(stopwatch.elapsed(TimeUnit.NANOSECONDS), Collections.emptyList(), 0);
     }
     // do scan all parsed document and compare them with target document;
-    List<SearchResult> searchResultList = new LinkedList<>();
+    final List<SearchResult> searchResultList = new LinkedList<>();
     ParsedDocumentMetrics searchingDocumentMetrics =
         new ParsedDocumentMetrics(corpus.size(), searchingParsedDocument, termPostingListMap);
-    for (ParsedDocument parsedDocument : relevantDocumentSet) {
-      SearchResult searchResult = new SearchResult();
-      searchResult.setUniqueIdentifier(parsedDocument.getDocId());
-      searchResult.setRelevanceScore(computeCosine(searchingDocumentMetrics, parsedDocument));
-      searchResultList.add(searchResult);
+    List<Future> futureList = new ArrayList<>();
+    List<ParsedDocument> documentToScan = new ArrayList<>(relevantDocumentSet);
+    for (List<ParsedDocument> subDocumentList : Lists.partition(documentToScan, THREAD_POOL_SIZE)) {
+      Future future = threadPool.submit(() -> {
+        for (ParsedDocument parsedDocument : subDocumentList) {
+          SearchResult searchResult = new SearchResult();
+          searchResult.setUniqueIdentifier(parsedDocument.getDocId());
+          searchResult.setRelevanceScore(computeCosine(searchingDocumentMetrics, parsedDocument));
+          searchResultList.add(searchResult);
+        }
+      });
+      futureList.add(future);
     }
+
+    for (Future future : futureList) {
+      try {
+        future.get();
+      } catch (Exception e) {
+        log.error("failed to get result from the future.", e);
+      }
+    }
+
 
     searchResultList.sort(Comparator.comparing(SearchResult::getRelevanceScore).reversed());
-
+    List<SearchResult> finallySearchResult = searchResultList;
     if (maxResults < searchResultList.size()) {
-      searchResultList = searchResultList.subList(0, maxResults);
+      finallySearchResult = searchResultList.subList(0, maxResults);
     }
 
-    return buildSearchResult(stopwatch.elapsed(TimeUnit.NANOSECONDS), searchResultList, relevantDocumentSet.size());
+    return buildSearchResult(stopwatch.elapsed(TimeUnit.NANOSECONDS), finallySearchResult, relevantDocumentSet.size());
   }
 
   private double computeCosine(ParsedDocumentMetrics searchingDocumentMetrics, ParsedDocument targetDocument) {
@@ -101,8 +124,8 @@ public class InvertedIndex implements TextSearchIndex {
     }
     double cosine = 0;
     for (String word : searchingUniqueWordSet) {
-      double score = (searchingDocumentMetrics.getTfIdfScore(word) * searchingDocumentMetrics.getDocumentMagnitude()) /
-          (targetDocumentMetrics.getTfIdfScore(word) * targetDocumentMetrics.getDocumentMagnitude());
+      double score = (searchingDocumentMetrics.getTfIdfScore(word) / searchingDocumentMetrics.getDocumentMagnitude()) *
+          (targetDocumentMetrics.getTfIdfScore(word) / targetDocumentMetrics.getDocumentMagnitude());
       cosine = cosine + score;
     }
     return cosine;

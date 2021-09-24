@@ -33,7 +33,7 @@ public class TextParseUtils {
             return Collections.emptyList();
         }
         List<String> tokenWords = new LinkedList<>();
-        // todo : analyzer 这里使用 final 变量是否有问题
+        // analyzer 这里使用 final 变量是否有问题，没问题
         try (TokenStream tokenStream = analyzer.tokenStream(null, rawText)) {
             CharTermAttribute termAttribute = tokenStream.getAttribute(CharTermAttribute.class);
             tokenStream.reset();
