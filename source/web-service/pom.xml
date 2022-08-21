@@ -176,12 +176,29 @@
     <dependency>
         <groupId>org.jboss.marshalling</groupId>
         <artifactId>jboss-marshalling</artifactId>
-
+    </dependency>
+    <dependency>
+        <groupId>com.alibaba.otter</groupId>
+        <artifactId>canal.client</artifactId>
+        <version>1.1.6</version>
     </dependency>
 
+    <dependency>
+        <groupId>com.alibaba.otter</groupId>
+        <artifactId>canal.common</artifactId>
+        <version>1.1.6</version>
+    </dependency>
+    <dependency>
+        <groupId>com.alibaba.otter</groupId>
+        <artifactId>canal.protocol</artifactId>
+        <version>1.1.6</version>
+    </dependency>
 
-
-
+    <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>3.6.1</version>
+    </dependency>
 </dependencies>
 
 </project>
