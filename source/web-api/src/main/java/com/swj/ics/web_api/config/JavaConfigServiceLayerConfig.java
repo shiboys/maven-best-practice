@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
  * Created by swj on 2016/12/6.
  */
 @Configuration
-@ComponentScan(basePackages={"com.swj.ics.spring_redis.service"})
+@ComponentScan(basePackages={"com.swj.ics.redis.spring_redis.service"})
 public class JavaConfigServiceLayerConfig {
 
 }

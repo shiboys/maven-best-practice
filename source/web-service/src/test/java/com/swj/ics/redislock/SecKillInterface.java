@@ -1,7 +1,7 @@
 package com.swj.ics.redislock;
 
-import com.swj.ics.redislockframework.CacheLock;
-import com.swj.ics.redislockframework.LockedObject;
+import com.swj.ics.redis.redislockframework.CacheLock;
+import com.swj.ics.redis.redislockframework.LockedObject;
 
 /**
  * Created by swj on 2017/11/26.

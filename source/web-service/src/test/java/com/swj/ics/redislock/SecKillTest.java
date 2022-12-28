@@ -2,7 +2,7 @@ package com.swj.ics.redislock;
 
 import java.lang.reflect.Proxy;
 import java.util.concurrent.CountDownLatch;
-import com.swj.ics.redislockframework.CacheLockInterceptor;
+import com.swj.ics.redis.redislockframework.CacheLockInterceptor;
 import org.junit.Test;
 
 /**

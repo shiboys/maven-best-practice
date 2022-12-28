@@ -29,7 +29,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @EnableWebMvc
 @Configuration
-@ComponentScan("com.swj.ics.spring_redis")
+@ComponentScan("com.swj.ics.redis.spring_redis")
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Bean

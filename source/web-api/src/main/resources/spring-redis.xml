@@ -14,7 +14,7 @@
        http://www.springframework.org/schema/spring-context.xsd">
 
     <!--自动扫描注解的bean-->
-    <context:component-scan base-package="com.swj.ics.spring_redis.service"/>
+    <context:component-scan base-package="com.swj.ics.redis.spring_redis.service"/>
     <!--引入properties文件-->
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
@@ -50,7 +50,7 @@
 
     </bean>
     <!--拦截器配置-->
-    <bean id="methodCacheInterceptor" class="com.swj.ics.spring_redis.aop.MethodCacheInterceptor">
+    <bean id="methodCacheInterceptor" class="com.swj.ics.redis.spring_redis.aop.MethodCacheInterceptor">
         <property name="redisTemplate" ref="redisTemplate" />
     </bean>
     <!--配置Aop的切点和通知-->
@@ -59,7 +59,7 @@
         <property name="pattern" value=".*service.impl.*getTimestamps" />
     </bean>
 <!--注册service bean-->
-    <bean id="redisTestService" class="com.swj.ics.spring_redis.service.impl.RedisTestServiceImpl">
+    <bean id="redisTestService" class="com.swj.ics.redis.spring_redis.service.impl.RedisTestServiceImpl">
     </bean>
     <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
 </beans>

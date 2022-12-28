@@ -1,6 +1,6 @@
 package com.swj.ics.web_api.controllers;
 
-import com.swj.ics.spring_redis.service.IUserService;
+import com.swj.ics.redis.spring_redis.service.IUserService;
 import com.swj.ics.web_dao.domain.autodealer.UnitTestUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
